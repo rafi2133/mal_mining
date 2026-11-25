@@ -448,7 +448,7 @@ function renderTrucks() {
     while (elements.truckFleet.children.length < truckCount) {
         const truckElement = document.createElement("div");
         truckElement.className = "map-entity truck-entity";
-        truckElement.innerHTML = '<span class="truck-model" aria-hidden="true"><span class="truck-cabin"></span><span class="truck-bed"></span><span class="truck-wheels"></span></span><span class="truck-cargo"></span>';
+        truckElement.innerHTML = '<img class="truck-model" src="./truck.svg" alt=""><span class="truck-cargo"></span>';
         elements.truckFleet.appendChild(truckElement);
     }
 

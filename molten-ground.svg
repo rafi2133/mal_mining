@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420">
+  <defs>
+    <linearGradient id="lava" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#9d2418"/>
+      <stop offset=".38" stop-color="#ed4b20"/>
+      <stop offset=".7" stop-color="#f78832"/>
+      <stop offset="1" stop-color="#a42a1d"/>
+    </linearGradient>
+    <filter id="flow" x="-15%" y="-15%" width="130%" height="130%">
+      <feTurbulence type="fractalNoise" baseFrequency=".009 .024" numOctaves="3" seed="11" result="texture"/>
+      <feDisplacementMap in="SourceGraphic" in2="texture" scale="31" xChannelSelector="R" yChannelSelector="G"/>
+    </filter>
+    <pattern id="grain" width="17" height="19" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="3" r=".7" fill="#a7a5a0" opacity=".14"/>
+      <circle cx="12" cy="14" r=".6" fill="#f3a274" opacity=".1"/>
+    </pattern>
+  </defs>
+  <rect width="640" height="420" fill="#111516"/>
+  <g fill="none" filter="url(#flow)">
+    <path d="M-70 66C46 6 66 146 170 113s135-100 225-43 118 105 265 13" stroke="#54221c" stroke-width="88"/>
+    <path d="M-70 66C46 6 66 146 170 113s135-100 225-43 118 105 265 13" stroke="url(#lava)" stroke-width="48"/>
+    <path d="M-35 317c109-130 144 77 259-44s113-137 221-72 129 92 236-28" stroke="#301c1a" stroke-width="98"/>
+    <path d="M-35 317c109-130 144 77 259-44s113-137 221-72 129 92 236-28" stroke="url(#lava)" stroke-width="48"/>
+    <path d="M-30 204c111 55 105 134 211 47s158-69 222 10 115 56 246-17" stroke="#74291c" stroke-width="28"/>
+    <path d="M-30 204c111 55 105 134 211 47s158-69 222 10 115 56 246-17" stroke="#fa6330" stroke-width="8"/>
+    <path d="M51-25c80 87 36 173 127 215s123 91 118 248M440-35c-73 102-23 169 62 224s86 101 74 240" stroke="#090d0e" stroke-width="20"/>
+    <path d="M51-25c80 87 36 173 127 215s123 91 118 248M440-35c-73 102-23 169 62 224s86 101 74 240" stroke="#d94423" stroke-width="4"/>
+  </g>
+  <rect width="640" height="420" fill="url(#grain)"/>
+</svg>
