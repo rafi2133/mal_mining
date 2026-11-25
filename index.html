@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#f5f7ef">
+    <title>MalMining Valley</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700;800&family=Nunito:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ethers/6.7.0/ethers.umd.min.js"></script>
+</head>
+<body>
+    <header class="topbar">
+        <a class="brand" href="#map" aria-label="MalMining home">
+            <span class="brand-mark">⛏</span>
+            <span>Mal<span class="brand-accent">Mining</span></span>
+        </a>
+        <div class="topbar-actions">
+            <button id="build-road-btn" class="top-link" type="button" aria-pressed="false">＋ Build roads</button>
+            <a class="top-link" href="#inventory-panel">▤ Inventory</a>
+            <a class="top-link" href="#market-panel">↗ Sales</a>
+            <button id="pause-btn" class="top-link" type="button">Ⅱ Pause</button>
+            <button id="connect-btn" class="wallet-btn" type="button">🦊 Connect wallet</button>
+        </div>
+    </header>
+
+    <section class="statusbar" aria-label="Game status">
+        <div class="level-summary">
+            <span class="level-icon">✦</span>
+            <div>
+                <strong id="level-name">Lv. 1 · New settlement</strong>
+                <small id="level-detail">A fresh valley with room to grow</small>
+            </div>
+        </div>
+        <div class="weather-summary"><span>🍃</span> Clear skies</div>
+        <div class="status-metrics">
+            <span>◈ <strong id="money">$0</strong> coins</span>
+            <span>⛏ <strong id="current-tool">Wooden Pickaxe</strong></span>
+            <span>☀ Day 1</span>
+        </div>
+    </section>
+
+    <div class="app-shell">
+        <nav class="left-nav" aria-label="Game sections">
+            <a class="nav-item selected" href="#map"><span>⌂</span>Valley</a>
+            <a class="nav-item" href="#map"><span>⛏</span>Mining</a>
+            <a class="nav-item" href="#inventory-panel"><span>▤</span>Storage</a>
+            <a class="nav-item" href="#market-panel"><span>↗</span>Market</a>
+        </nav>
+
+        <main class="game-column">
+            <section id="map" class="world-card" aria-label="Mining valley map">
+                <div class="world-heading">
+                    <div class="world-title">
+                        <span class="world-badge">⛰️</span>
+                        <div>
+                            <h1>MalMining Valley</h1>
+                            <p>Five mines · One valley · Build your way to the summit</p>
+                        </div>
+                    </div>
+                    <span id="production-state" class="production-state"><i></i> Production running</span>
+                    <button id="win-banner" class="win-banner" type="button" hidden>🏆 Play again</button>
+                </div>
+
+                <div class="world-window">
+                    <div class="world-haze"></div>
+                    <div class="world-plane">
+                        <div id="grid-container" class="terrain-grid" aria-hidden="true"></div>
+                        <div class="tree tree-one">🌳</div>
+                        <div class="tree tree-two">🌲</div>
+                        <div class="tree tree-three">🌳</div>
+                        <div class="tree tree-four">🌲</div>
+                        <div class="tree tree-five">🌳</div>
+                        <div class="tree tree-six">🌳</div>
+                        <div class="tree tree-seven">🌲</div>
+                        <div class="tree tree-eight">🌳</div>
+                        <div class="map-detail bush bush-one" aria-hidden="true">🌿</div>
+                        <div class="map-detail bush bush-two" aria-hidden="true">🌿</div>
+                        <div class="map-detail bush bush-three" aria-hidden="true">🌿</div>
+                        <div class="map-detail bush bush-four" aria-hidden="true">🌿</div>
+                        <div class="map-detail rock rock-one" aria-hidden="true">🪨</div>
+                        <div class="map-detail rock rock-two" aria-hidden="true">🪨</div>
+                        <div class="map-detail rock rock-three" aria-hidden="true">🪨</div>
+                        <div class="map-detail flowers flowers-one" aria-hidden="true">🌼</div>
+                        <div class="map-detail flowers flowers-two" aria-hidden="true">🌸</div>
+                        <div class="map-detail crate crate-one" aria-hidden="true">📦</div>
+                        <div class="map-detail crate crate-two" aria-hidden="true">📦</div>
+                        <div class="map-detail pond" aria-hidden="true">💧</div>
+                        <button class="map-entity mine-site selected" data-mine="stone" type="button" style="top: 20%; left: 20%;" aria-label="Select Stone Mine">
+                            <span class="mine-art" aria-hidden="true"><span class="mine-hill"></span><span class="mine-frame"></span><span class="mine-entrance"></span><span class="mine-ore">🪨</span></span>
+                            <span class="mine-buildings" aria-label="Mine facilities"><span class="mine-building well-building" title="Well"><span class="well-model" aria-hidden="true"></span><small>Well</small></span><span class="mine-building kitchen-building" title="Kitchen"><span class="kitchen-model" aria-hidden="true"></span><small>Kitchen</small></span></span>
+                            <span class="entity-label">Stone Mine</span><span class="entity-progress">0 / 20 sold</span>
+                        </button>
+                        <button class="map-entity mine-site" data-mine="copper" type="button" style="top: 20%; left: 80%;" aria-label="Select Copper Mine">
+                            <span class="mine-art" aria-hidden="true"><span class="mine-hill"></span><span class="mine-frame"></span><span class="mine-entrance"></span><span class="mine-ore">🟠</span></span>
+                            <span class="mine-buildings" aria-label="Mine facilities"><span class="mine-building well-building" title="Well"><span class="well-model" aria-hidden="true"></span><small>Well</small></span><span class="mine-building kitchen-building" title="Kitchen"><span class="kitchen-model" aria-hidden="true"></span><small>Kitchen</small></span></span>
+                            <span class="entity-label">Copper Mine</span><span class="entity-progress">0 / 15 sold</span>
+                        </button>
+                        <button class="map-entity mine-site" data-mine="iron" type="button" style="top: 50%; left: 84%;" aria-label="Select Iron Mine">
+                            <span class="mine-art" aria-hidden="true"><span class="mine-hill"></span><span class="mine-frame"></span><span class="mine-entrance"></span><span class="mine-ore">⚙️</span></span>
+                            <span class="mine-buildings" aria-label="Mine facilities"><span class="mine-building well-building" title="Well"><span class="well-model" aria-hidden="true"></span><small>Well</small></span><span class="mine-building kitchen-building" title="Kitchen"><span class="kitchen-model" aria-hidden="true"></span><small>Kitchen</small></span></span>
+                            <span class="entity-label">Iron Mine</span><span class="entity-progress">0 / 12 sold</span>
+                        </button>
+                        <button class="map-entity mine-site" data-mine="gold" type="button" style="top: 70%; left: 82%;" aria-label="Select Gold Mine">
+                            <span class="mine-art" aria-hidden="true"><span class="mine-hill"></span><span class="mine-frame"></span><span class="mine-entrance"></span><span class="mine-ore">🪙</span></span>
+                            <span class="mine-buildings" aria-label="Mine facilities"><span class="mine-building well-building" title="Well"><span class="well-model" aria-hidden="true"></span><small>Well</small></span><span class="mine-building kitchen-building" title="Kitchen"><span class="kitchen-model" aria-hidden="true"></span><small>Kitchen</small></span></span>
+                            <span class="entity-label">Gold Mine</span><span class="entity-progress">0 / 10 sold</span>
+                        </button>
+                        <button class="map-entity mine-site" data-mine="diamond" type="button" style="top: 78%; left: 18%;" aria-label="Select Diamond Mine">
+                            <span class="mine-art" aria-hidden="true"><span class="mine-hill"></span><span class="mine-frame"></span><span class="mine-entrance"></span><span class="mine-ore">💎</span></span>
+                            <span class="mine-buildings" aria-label="Mine facilities"><span class="mine-building well-building" title="Well"><span class="well-model" aria-hidden="true"></span><small>Well</small></span><span class="mine-building kitchen-building" title="Kitchen"><span class="kitchen-model" aria-hidden="true"></span><small>Kitchen</small></span></span>
+                            <span class="entity-label">Diamond Mine</span><span class="entity-progress">0 / 8 sold</span>
+                        </button>
+                        <div class="map-entity depot-entity" style="top: 50%; left: 50%;">
+                            <span class="entity-emoji">🏭</span><span class="entity-label">Warehouse</span><span class="entity-count" id="depot-count">0</span>
+                        </div>
+                        <div class="map-entity market-entity" style="top: 64%; left: 70%;">
+                            <span class="entity-emoji">🏪</span><span class="entity-label">Market</span><span class="entity-count" id="market-depot-count">0</span>
+                        </div>
+                        <div id="truck-fleet" aria-label="Truck fleet"></div>
+                    </div>
+                    <div class="map-legend" aria-label="Map legend">
+                        <strong>Map guide</strong>
+                        <span><i class="legend-road"></i>Road</span>
+                        <span><i>🏭</i>Warehouse</span>
+                        <span><i>🏪</i>Market</span>
+                        <span><i>🚚</i>Truck</span>
+                        <span><i class="legend-well"></i>Well</span>
+                        <span><i class="legend-kitchen"></i>Kitchen</span>
+                    </div>
+                    <div class="mine-selection" id="mine-selection">Select a mine to get started</div>
+                    <div class="map-caption"><span class="caption-dot"></span> Build roads tile by tile · connect a mine to warehouse and market</div>
+                    <div class="map-controls" aria-label="Map controls">
+                        <button type="button" aria-label="Reset map view">↻</button>
+                        <button type="button" aria-label="Zoom out">−</button>
+                        <span id="zoom-label">100%</span>
+                        <button type="button" aria-label="Zoom in">＋</button>
+                    </div>
+                </div>
+            </section>
+
+            <section id="build-panel" class="build-panel">
+                <div class="build-heading">
+                    <div>
+                        <h2>Build your mining operation</h2>
+                        <p>Mine ore, ship it to market, sell it, and unlock every mine</p>
+                    </div>
+                    <span class="build-hint">Your next steps</span>
+                </div>
+                <div class="action-cards">
+                    <button class="action-card command-action" id="mine-action" type="button">
+                        <span class="action-icon" id="mine-action-icon">▶</span>
+                        <strong id="mine-action-title">Start mining Stone</strong>
+                        <small id="resource-name">Command the NPC crew to begin</small>
+                    </button>
+                    <button class="action-card" id="sell-action" type="button">
+                        <span class="action-icon">📦</span>
+                        <strong>Sell market stock</strong>
+                        <small>Earn coins and complete mine goals</small>
+                    </button>
+                    <button class="action-card road-action" id="build-road-action" type="button">
+                        <span class="action-icon">🛣️</span>
+                        <strong>Build roads</strong>
+                        <small>Click map tiles to place or remove</small>
+                    </button>
+                    <button class="action-card upgrade-action" id="upgrade-action" type="button">
+                        <span class="action-icon">🛠️</span>
+                        <strong id="upgrade-title">Upgrade tools</strong>
+                        <small id="upgrade-cost">In-game coins · MetaMask network fee</small>
+                    </button>
+                    <button class="action-card" id="wallet-action" type="button">
+                        <span class="action-icon">🔗</span>
+                        <strong>Save your progress</strong>
+                        <small id="wallet-hint">Connect your wallet</small>
+                    </button>
+                </div>
+            </section>
+            <footer id="game-footer" class="game-footer">Sell the target amount from each mine to complete the valley.</footer>
+        </main>
+
+        <aside class="right-panel">
+            <div class="panel-tabs">
+                <a class="panel-tab active" href="#inventory-panel">Stock</a>
+                <a class="panel-tab" href="#market-panel">Trade</a>
+                <a class="panel-tab" href="#build-panel">Plans</a>
+            </div>
+
+            <section id="inventory-panel" class="side-section">
+                <div class="section-title">
+                    <h2>Active mine</h2>
+                    <span id="tool-level">Tool Lv. 1</span>
+                </div>
+                <div class="active-mine-card">
+                    <span id="active-mine-icon" class="active-mine-icon">🪨</span>
+                    <div><strong id="active-mine-name">Stone Mine</strong><small id="mine-requirement">Available now</small></div>
+                </div>
+                <div id="facilities-panel" class="facility-panel">
+                    <div class="section-title"><h2>Mine facilities</h2><span id="facility-status">0 / 2 built</span></div>
+                    <div class="facility-control">
+                        <div><strong>Well</strong><small id="well-status">Required</small></div>
+                        <button id="build-well" class="facility-button" type="button">Build well · Free</button>
+                    </div>
+                    <div class="facility-control">
+                        <div><strong>Kitchen</strong><small id="kitchen-status">Required</small></div>
+                        <button id="build-kitchen" class="facility-button" type="button">Build kitchen · Free</button>
+                    </div>
+                    <p id="facility-note" class="facility-note">Your first mine's well and kitchen are free.</p>
+                </div>
+                <div class="storage-summary">
+                    <p>⛏ Mine stock <strong id="storage-capacity">0 / 10 to truck</strong></p>
+                    <div class="storage-track"><span id="storage-fill"></span></div>
+                    <small id="inventory-note">NPC miners are ready.</small>
+                    <p class="mine-goal-line">🏁 Completion goal <strong id="mine-goal">0 / 20 sold</strong></p>
+                    <p class="mine-rate-line">⚒ <span id="current-resource">Stone</span> output <strong id="mine-rate">1 / 3s</strong></p>
+                </div>
+                <div class="logistics-status"><span>🚚 Truck</span><strong id="truck-status">Waiting at mine</strong></div>
+                <div class="logistics-status"><span>🏭 Warehouse</span><strong id="warehouse-stock">0 units</strong></div>
+                <div class="logistics-status"><span>🛣 Route</span><strong id="route-status">Not connected</strong></div>
+            </section>
+
+            <section class="side-section">
+                <div class="section-title"><h2>Market inventory</h2><span id="market-stock">0 units</span></div>
+                <div class="inventory-grid" id="inventory-list">
+                    <div class="inventory-item"><span>🪨</span><div><small>Stone</small><strong id="inv-stone">0</strong></div></div>
+                    <div class="inventory-item"><span>🟠</span><div><small>Copper</small><strong id="inv-copper">0</strong></div></div>
+                    <div class="inventory-item"><span>⚙️</span><div><small>Iron</small><strong id="inv-iron">0</strong></div></div>
+                    <div class="inventory-item"><span>🪙</span><div><small>Gold</small><strong id="inv-gold">0</strong></div></div>
+                    <div class="inventory-item"><span>💎</span><div><small>Diamond</small><strong id="inv-diamond">0</strong></div></div>
+                </div>
+            </section>
+
+            <section id="market-panel" class="side-section market-section">
+                <div class="section-title">
+                    <h2>Market</h2>
+                    <span class="market-open"><i></i> Open</span>
+                </div>
+                <div class="market-row"><span>Active mine price</span><strong id="ore-value">$1 / unit</strong></div>
+                <button id="sell-btn" class="primary-button" type="button">Sell all ore</button>
+                <p id="market-message" class="market-message">The truck will deliver ore here for sale.</p>
+            </section>
+
+            <section class="side-section tool-section">
+                <div class="section-title"><h2>Truck fleet</h2><span id="truck-count">1 / 3 trucks</span></div>
+                <button id="buy-truck-two" class="fleet-button" type="button">Buy truck 2 · $100</button>
+                <button id="buy-truck-three" class="fleet-button" type="button">Buy truck 3 · $200</button>
+            </section>
+
+            <section class="side-section tool-section">
+                <div class="section-title">
+                    <h2>Pickaxe</h2>
+                    <span id="tool-level-display">Level 1</span>
+                </div>
+                <div class="tool-summary">
+                    <span class="tool-icon">⛏️</span>
+                    <div><strong id="tool-name">Wooden Pickaxe</strong><small id="tool-speed">Can mine Stone</small></div>
+                </div>
+                <button id="buy-tool-btn" class="secondary-button" type="button">Upgrade tools</button>
+            </section>
+        </aside>
+    </div>
+
+    <script type="module" src="game.mjs?v=3"></script>
+</body>
+</html>
